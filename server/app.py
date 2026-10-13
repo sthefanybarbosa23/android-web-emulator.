@@ -13,7 +13,7 @@ TOKEN = os.environ.get("EMULATOR_API_TOKEN", "")
 ANDROID_HOST = os.environ.get("ANDROID_ADB_HOST", "android")
 ANDROID_PORT = os.environ.get("ANDROID_ADB_PORT", "5555")
 MAX_APK_BYTES = int(os.environ.get("MAX_APK_BYTES", str(200 * 1024 * 1024)))
-PACKAGE_RE = re.compile(r"^[A-Za-z][A-Za-z0-9_]*(?:\\.[A-Za-z][A-Za-z0-9_]*)+$")
+PACKAGE_RE = re.compile(r"^[A-Za-z][A-Za-z0-9_]*(?:\.[A-Za-z][A-Za-z0-9_]*)+$")
 
 # CORS is deliberately not opened to arbitrary browser origins.
 allowed_origin = os.environ.get("WEB_ORIGIN", "")
@@ -149,7 +149,7 @@ async def install_apk(
 
         # APKs are ZIP containers. This is a basic file sanity check, not a security scan.
         with path.open("rb") as uploaded:
-            if uploaded.read(4) != b"PK\\x03\\x04":
+            if uploaded.read(4) != b"PK\x03\x04":
                 raise HTTPException(status_code=400, detail="O arquivo não parece ser um APK/ZIP válido.")
 
         connect_android()
