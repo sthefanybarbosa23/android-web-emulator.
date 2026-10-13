@@ -14,7 +14,24 @@ services:
       - "5555"
     networks:
       - android-private
-    # Não adicionar ports para 5555; ADB não deve ficar público.
+    # ADB fica apenas na rede Docker. Nunca publique a porta 5555.
+
+  api:
+    build:
+      context: ../server
+    container_name: android-web-emulator-api
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      ANDROID_ADB_HOST: android
+      ANDROID_ADB_PORT: "5555"
+    ports:
+      - "127.0.0.1:8080:8080"
+    depends_on:
+      - android
+    networks:
+      - android-private
 
 volumes:
   android11-data:
