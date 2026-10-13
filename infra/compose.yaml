@@ -1,0 +1,24 @@
+services:
+  android:
+    image: redroid/redroid:11.0.0-latest
+    container_name: android-web-emulator-android11
+    privileged: true
+    restart: unless-stopped
+    command:
+      - androidboot.redroid_width=720
+      - androidboot.redroid_height=1280
+      - androidboot.redroid_dpi=320
+    volumes:
+      - android11-data:/data
+    expose:
+      - "5555"
+    networks:
+      - android-private
+    # Não adicionar ports para 5555; ADB não deve ficar público.
+
+volumes:
+  android11-data:
+
+networks:
+  android-private:
+    driver: bridge
