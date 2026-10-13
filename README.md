@@ -1,20 +1,26 @@
 # Android Web Emulator — Android 11
 
-Objetivo: acessar um Android real remotamente pelo navegador. O Android roda num servidor Linux; HTML não é o Android.
+Projeto para executar Android 11 real num servidor Linux compatível e evoluir para acesso pelo navegador. A interface HTML é só o cliente, não é um sistema Android.
 
-## Estado atual
-A interface e a configuração inicial estão aqui. O boot do Android não foi testado; instalação de APK pelo navegador, streaming de tela e controle por toque/teclado ainda não estão implementados.
+## O que está no repositório
+- Interface inicial em \`web/\`.
+- Runtime Android 11 via ReDroid em \`infra/compose.yaml\`.
+- API inicial em \`server/\` para consultar status e enviar APK para instalação.
+- Instruções para IA em \`AGENTS.md\`.
 
-## Requisitos
-Host Linux compatível com ReDroid, Docker Engine e Docker Compose. Consulte a documentação oficial do ReDroid para requisitos de kernel.
-
-## Iniciar em host Linux preparado
+## Iniciar num servidor Linux compatível
+Consulte os requisitos de kernel na documentação oficial do ReDroid. No host preparado:
 \`\`\`bash
 cd infra
-docker compose up -d
-docker compose logs -f android
+cp .env.example .env
+\`\`\`
+Edite \`.env\` e substitua \`EMULATOR_API_TOKEN\` por um segredo longo e aleatório. Depois:
+\`\`\`bash
+docker compose up -d --build
+docker compose logs -f android api
 \`\`\`
 
-Não exponha ADB (porta 5555) à internet. O container usa privilégios elevados e só deve rodar em host que você controla.
+A API fica em \`127.0.0.1:8080\` e o ADB fica na rede Docker privada. Não publique a porta 5555. O container Android usa privilégios elevados; não execute num servidor que você não controla.
 
-Abra web/index.html ou sirva a pasta web por HTTP. Leia docs/STATUS.md e AGENTS.md antes de continuar.
+## Estado honesto
+A configuração e a API inicial foram adicionadas ao repositório, mas **não foram executadas/testadas num host Linux**. Streaming da tela real no browser, toque/teclado, login e conexão da interface à API ainda não estão implementados. Consulte \`docs/STATUS.md\`.
